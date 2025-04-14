@@ -1,0 +1,8 @@
+bin/*
+!bin/.gitkeep
+*.exe
+*.json
+.vscode
+*.swp
+.env
+board_of_messages.txt
