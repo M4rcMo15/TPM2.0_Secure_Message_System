@@ -1,35 +1,75 @@
-# TPM 2.0 Secure Message Board System
+# PV204-Security-Technologies-Project
 
-## How to use
+## Server setup
+
+### PostgreSQL
+
+The server requires PostgreSQL database. You can setup a development instance
+with Docker:
 
 ```bash
+docker run --name postgres -e POSTGRES_PASSWORD=mysecretpassword -d -p 5432:5432 postgres:bookworm
+
+# or with Podman
+podman run --name postgres -e POSTGRES_PASSWORD=mysecretpassword -d -p 5432:5432 docker.io/postgres:bookworm
+```
+
+### Credentials
+
+Credentials to the database are stored in the environemnt file `.env`. TLS
+certificate and key paths are also configured there.
+
+```bash
+# only for development, insecure!
+cp .env.example .env
+```
+
+The self-signed TLS certificate and key in the `tls` directory are provided for
+testing purposes and were generated with the following:
+
+```bash
+openssl req -x509 -newkey rsa:4096 -keyout server.key -out server.crt -days 365 -nodes
+```
+
+## Client setup
+
+The client requires
+[TPM](https://wiki.archlinux.org/title/Trusted_Platform_Module).
+
+You can disable TLS verification by running the client with the
+`IGNORE_TLS_ERRORS=1` environment variable.
+
+```
+$ export IGNORE_TLS_ERRORS=1
+$ sudo -E ./bin/client
+```
+
+## Compilation && Running the tool
+
+The source code is written in [Go](https://go.dev/doc/install). Here's how to
+build and run the binaries:
+
+```bash
+# compile both binaries with make
+make build
+
+# or manually
+go build -o bin/server cmd/server/main.go
+go build -o bin/client cmd/server/client.go
+
 # run the server
 go run cmd/server/main.go
 
 # run the client
 go run cmd/client/main.go
 ```
-The client connects to the server and prints the authentication result.
 
-- Implement a simple message board to which clients can post messages
-- Clients authenticate to the board with their TPM
-  - Register on the first interaction
-    - At this point only the server needs to be authenticated (e.g., known certificate)
-  - Further communication is fully authenticated
-    - Both sides need to be authenticated (the server does not need to use TPM)
-    - The client should not be able to connect from a different device after the registration (e.g., remote attestation
+## Development
 
-# build all packages in cmd directory
-go build -o bin/ cmd/...
+```bash
+# build binaries
+make build
 
-# run the compiled binary
-./bin/poc
-
-go build -o bin/client/ cmd/client/main.go && sudo bin/client/main
-
-go build -o bin/server/ cmd/server/main.go && bin/server/main
+# format the code
+make ftm
 ```
-
-<!-- links -->
-
-[1]: https://decide.nolog.cz/#/poll/LjjKu4fayG/participation?encryptionKey=yagKvnA75GLrktCthJX4xKa08pgmN32CLtWDg0Tw
