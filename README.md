@@ -1,5 +1,4 @@
-# PV204-Security-Technologies-Project
-
+# TPM2.0_Secure_Message_System
 ## Server setup
 
 ### PostgreSQL
