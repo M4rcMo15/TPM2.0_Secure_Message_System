@@ -73,3 +73,9 @@ make build
 # format the code
 make ftm
 ```
+
+## Credits and Contribution
+    • Adam Chovanec
+    • Alexandre Deneu
+    • Jan Sekanina
+    • Marc Monfort Muñoz
